@@ -1,0 +1,28 @@
+{
+  "name": "scalemart",
+  "version": "1.0.0",
+  "description": "It a production ready E-commerce backend that consists the features like Secure user management and product listing data to orders and to add into the cart",
+  "main": "index.js",
+  "scripts": {
+    "generate-swagger": "node swagger.js",
+    "prestart": "node swagger.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Robin singh",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limiter": "^1.3.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5",
+    "nodemon": "^3.1.11",
+    "razorpay": "^2.9.6",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.3.6"
+  }
+}
