@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const ApiError = require("../Utils/ApiError");
 const { JWT_SECRET } = require("../config/jwt");
 
-exports.protect = (req, res, next) => {
+const protect = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
@@ -14,7 +14,7 @@ exports.protect = (req, res, next) => {
   next();
 };
 
-const roleCheck = (req, res, next) => {
+const adminRole = (req, res, next) => {
   const { user } = req.user;
   const role = "ADMIN";
 
@@ -24,3 +24,17 @@ const roleCheck = (req, res, next) => {
     return res.status(403).json(new ApiError(403, "Permission not granted"));
   }
 };
+const userRole = (req, res, next) => {
+  const { user } = req.user;
+  const role = "USER";
+
+  if (user.role.toUpperCase() === role) {
+    next();
+  } else {
+    return res.status(403).json(new ApiError(403, "Permission not granted"));
+  }
+};
+
+module.exports = { protect, adminRole, userRole };
+
+

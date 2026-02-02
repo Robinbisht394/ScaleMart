@@ -8,7 +8,6 @@ const categoryValidationSchema = z.object({
       .min(1, "Category name is required")
       .max(50, "Name is too long"),
 
-    // Ensures slug is lowercase to match Mongoose logic
     slug: z
       .string()
       .min(1, "Slug is required")
