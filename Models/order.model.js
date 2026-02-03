@@ -7,12 +7,8 @@ const orderSchema = new mongoose.Schema({
     index: true,
   },
   shippingAdress: {
-    fullName: String,
-    phone: String,
-    addressLine: String,
-    city: String,
-    state: String,
-    pincode: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Address",
   },
   paymentMethod: {
     type: String,

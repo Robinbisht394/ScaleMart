@@ -3,7 +3,8 @@ const orderModel = require("../Models/order.model");
 const cartModel = require("../Models/cart.model");
 const cartService = require("../Services/cart.service");
 const helper = require("../Utils/helper");
-
+const addressModel = require("../Models/address.model");
+const addressService = require("../Services/address.service");
 //create new order
 const createOrder = async (req) => {
   const { shippingAdress, paymentMethod } = req.body;
@@ -19,10 +20,19 @@ const createOrder = async (req) => {
   if (!cart || cart.cartItems.length === 0)
     throw new ApiError(400, "Cart is Empty");
 
+  // check if address is new or old
+  let isAddressRegistered;
+  if (typeof shippingAdress == "object") {
+    isAddressRegistered = await addressService.createNewAdress(
+      userId,
+      shippingAdress,
+    );
+  }
   //   new order object
   const order = {
     user: userId,
-    shippingAddress: shippingAdress,
+    shippingAddress:
+      typeof shippingAdress === "string" ? shippingAdress : isAddressRegistered,
     paymentMethod: paymentMethod,
   };
 
