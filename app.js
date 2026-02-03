@@ -12,6 +12,8 @@ const cartRoutes = require("./Routes/cart.routes.js");
 const orderRoutes = require("./Routes/order.routes.js");
 const paymentRoutes = require("./Routes/payment.routes.js");
 const categoryRoutes = require("./Routes/category.routes.js");
+const userAnalyticsRoutes = require("./Routes/userAnalytics.routes.js");
+const adminAnalyticsRoutes = require("./Routes/admin.routes.js");
 const app = express();
 
 app.use(
@@ -38,8 +40,6 @@ if (fs.existsSync(swaggerFilePath)) {
   console.log("⚠️ swagger-output.json not found. Run: node swagger.js");
 }
 
-
-
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/products", productRoutes);
@@ -47,6 +47,8 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/analytics/user", userAnalyticsRoutes);
+app.use("/api/v1/analytics/admin", adminAnalyticsRoutes);
 
 app.get("/", (req, res) => {
   res.send("ScaleMart API running 🚀", req.body);
