@@ -3,7 +3,6 @@ const orderModel = require("../Models/order.model");
 const cartModel = require("../Models/cart.model");
 const cartService = require("../Services/cart.service");
 const helper = require("../Utils/helper");
-const addressModel = require("../Models/address.model");
 const addressService = require("../Services/address.service");
 const redisClient = require("../Config/redis").redisClient;
 
@@ -34,7 +33,9 @@ const createOrder = async (req) => {
   const order = {
     user: userId,
     shippingAddress:
-      typeof shippingAdress === "string" ? shippingAdress : isAddressRegistered,
+      typeof shippingAdress === "string"
+        ? shippingAdress
+        : isAddressRegistered._id,
     paymentMethod: paymentMethod,
   };
 
