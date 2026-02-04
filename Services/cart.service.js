@@ -1,6 +1,7 @@
 const ApiError = require("../Utils/ApiError");
 const cartModel = require("../Models/cart.model");
 const productModel = require("../Models/product.model");
+const redisClient = require("../Config/redis").redisClient;
 
 const addTocart = async (userId, productId, productQuantity) => {
   // check if product exist
@@ -41,6 +42,10 @@ const addTocart = async (userId, productId, productQuantity) => {
 // get cart
 
 const getCart = async (userId) => {
+  const cacheCart = await redisClient.get(`cart_${userId}`);
+  if (cacheCart) {
+    return JSON.parse(cacheCart);
+  } // return the cache cart if exist
   const cart = await cartModel
     .findOne({ user: userId })
     .populate(
@@ -54,6 +59,9 @@ const getCart = async (userId) => {
     console.log("price", typeof item.product.price);
     return sum + item.product.price * item.quantity;
   }, 0);
+
+  // cache the cart for 5 minutes
+  redisClient.setEx(`cart_${userId}`, 300, JSON.stringify({ cart, total }));
 
   return { cart, total };
 };
