@@ -2,7 +2,7 @@ const { GiThrownDaggers } = require("react-icons/gi");
 const categoryModel = require("../Models/category.model");
 const productModel = require("../Models/product.model.js");
 const ApiError = require("../utils/ApiError");
-
+const redisClient = require("../Config/redis.js");
 // create new Product
 const createProductService = async (req) => {
   console.log("product service", req);
@@ -57,6 +57,10 @@ const deleteProduct = async (req) => {
 };
 
 const getAllproducts = async () => {
+  const cacheProducts = await redisClient.redisClient.get("all_products");
+  if (cacheProducts) {
+    return JSON.parse(cacheProducts);
+  }
   const products = await productModel
     .find(
       {},
@@ -77,6 +81,8 @@ const getAllproducts = async () => {
 
   if (!products) throw new ApiError(404, "No products Found");
 
+  redisClient.redisClient.setEx("all_products", 300, JSON.stringify(products)); // cache the products for 5 hour
+
   return products;
 };
 
@@ -92,6 +98,11 @@ const searchProducts = async (req) => {
     maxPrice,
   } = req.query;
 
+  const cacheKey = `search_${JSON.stringify(req.query)}`;
+  const cachedResults = await redisClient.redisClient.get(cacheKey);
+  if (cachedResults) {
+    return JSON.parse(cachedResults);
+  }
   const queryObject = { isActive: true };
   if (name) {
     queryObject.$or = [
@@ -117,6 +128,14 @@ const searchProducts = async (req) => {
     .limit(Number(limit));
 
   const total = await productModel.countDocuments(queryObject);
+
+  // cache the user search results for 5 minutes
+  redisClient.redisClient.setEx(
+    cacheKey,
+    300,
+    JSON.stringify({ total, page, pages: Math.ceil(total / limit), products }),
+  );
+  
   return {
     total: total,
     page: page,

@@ -5,6 +5,8 @@ const cartService = require("../Services/cart.service");
 const helper = require("../Utils/helper");
 const addressModel = require("../Models/address.model");
 const addressService = require("../Services/address.service");
+const redisClient = require("../Config/redis").redisClient;
+
 //create new order
 const createOrder = async (req) => {
   const { shippingAdress, paymentMethod } = req.body;
@@ -116,6 +118,11 @@ const orderStatusUpdate = async (orderId, status) => {
 
 // get all order for customer
 const getMyorders = async (userId) => {
+  const cacheOrders = await redisClient.get(`orders_${userId}`);
+  if (cacheOrders) {
+    return JSON.parse(cacheOrders);
+  } // return cache orders if exist
+
   const orders = await orderModel
     .find({ user: userId })
     .sort({ createdAt: -1 });
@@ -124,6 +131,8 @@ const getMyorders = async (userId) => {
     throw new ApiError(404, "No Order Found");
   }
 
+  // cache the user orders for 5 minutes
+  redisClient.setEx(`orders_${userId}`, 300, JSON.stringify(orders));
   return orders;
 };
 
