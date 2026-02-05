@@ -1,5 +1,5 @@
 const categoryModel = require("../Models/category.model.js");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../Utils/ApiError");
 
 const createCategory = async (req) => {
   // check if category exist

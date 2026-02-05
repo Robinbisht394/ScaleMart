@@ -1,4 +1,4 @@
-const { GiThrownDaggers } = require("react-icons/gi");
+
 const categoryModel = require("../Models/category.model");
 const productModel = require("../Models/product.model.js");
 const ApiError = require("../utils/ApiError");
