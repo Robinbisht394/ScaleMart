@@ -1,4 +1,4 @@
-const ApiResponse = require("../utils/ApiResponse");
+const ApiResponse = require("../Utils/ApiResponse.js");
 const productService = require("../Services/product.service.js");
 const asyncHandler = require("../Utils/asyncHandler.js");
 

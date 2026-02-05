@@ -1,6 +1,6 @@
 const categoryModel = require("../Models/category.model.js");
-const ApiResponse = require("../utils/ApiResponse");
-const ApiError = require("../utils/ApiError");
+const ApiResponse = require("../Utils/ApiResponse");
+const ApiError = require("../Utils/ApiError");
 const categories = require("../Services/category.service.js");
 const asyncHandler = require("../Utils/asyncHandler.js");
 
