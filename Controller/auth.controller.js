@@ -1,5 +1,5 @@
 const ApiResponse = require("../Utils/ApiResponse");
-const asyncHandler = require("../utils/asyncHandler");
+const asyncHandler = require("../Utils/asyncHandler");
 const authService = require("../Services/auth.service");
 
 exports.signup = asyncHandler(async (req, res) => {

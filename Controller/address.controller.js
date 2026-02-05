@@ -1,5 +1,6 @@
 const ApiResponse = require("../Utils/ApiResponse");
 const addressService = require("../Services/address.service");
+const asyncHandler = require("../Utils/asyncHandler");
 const addNewAddress = asyncHandler(async (req, res) => {
   const { address } = req.body;
   const newAddress = await addressService.createNewAdress(userId, address);
