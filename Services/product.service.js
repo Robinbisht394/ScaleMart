@@ -1,7 +1,7 @@
 
 const categoryModel = require("../Models/category.model");
 const productModel = require("../Models/product.model.js");
-const ApiError = require("../utils/ApiError");
+const ApiError = require("../Utils/ApiError");
 const redisClient = require("../Config/redis.js");
 // create new Product
 const createProductService = async (req) => {
