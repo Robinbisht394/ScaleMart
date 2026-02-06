@@ -7,7 +7,7 @@ const {
   adminRole,
 } = require("../middlewares/auth.middleware");
 
-const validate = require("../middlewares");
+const validate = require("../middlewares/validate.middleware");
 const { orderValidationSchema } = require("../validations/order.validations");
 router.post(
   "/",

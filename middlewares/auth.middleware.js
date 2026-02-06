@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const ApiError = require("../Utils/ApiError");
-const { JWT_SECRET } = require("../config/jwt");
+const { JWT_SECRET } = require("../Config/jwt");
 
 const protect = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -36,5 +36,3 @@ const userRole = (req, res, next) => {
 };
 
 module.exports = { protect, adminRole, userRole };
-
-
