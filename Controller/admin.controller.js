@@ -1,5 +1,5 @@
 const userService = require("../Services/user.service");
-const ApiResponse = require("../utils/ApiResponse");
+const ApiResponse = require("../Utils/ApiResponse");
 const adminService = require("../Services/adminService");
 const asyncHandler = require("../Utils/asyncHandler");
 const getOrdersOverview = asyncHandler(async (req, res) => {
