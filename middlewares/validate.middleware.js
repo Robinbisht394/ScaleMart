@@ -1,6 +1,6 @@
 const { ZodError } = require("zod");
 const ApiError = require("../Utils/ApiError");
-const { BiError } = require("react-icons/bi");
+// const { BiError } = require("react-icons/bi");
 
 const validate = (schema) => (req, res, next) => {
   console.log("validation", req.body);
