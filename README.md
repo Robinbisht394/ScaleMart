@@ -1,24 +1,23 @@
-
 🛒 ScaleMart – Scalable E-Commerce Backend System
 
 A production-ready e-commerce backend built with scalability, performance, security, and real-world business logic in mind.
 ScaleMart goes beyond basic CRUD APIs and focuses on how real e-commerce systems are designed and operated in production.
-
 
 ---
 
 ✨ Recent Updates
 
 **[Feb 2026]** ✅ Integrated Address Management Routes
+
 - Dedicated endpoints for user address management
 - Add, retrieve, and delete addresses
 - Supports multiple addresses per user
 
-**[Feb 2026]** ✅ Integrated User & Admin Analytics Routes  
+**[Feb 2026]** ✅ Integrated User & Admin Analytics Routes
+
 - User analytics: Order summaries and monthly spending insights
 - Admin analytics: Top-selling products and order overview
 - Redis-cached endpoints for optimal performance
-
 
 ---
 
@@ -41,8 +40,6 @@ Analytics and insights
 
 API documentation and validation
 
-
-
 ---
 
 🎯 Key Objectives
@@ -56,8 +53,6 @@ Design production-level APIs (pagination, filtering, sorting, caching)
 Implement real business workflows, not just CRUD
 
 Make the project interview-ready for backend roles
-
-
 
 ---
 
@@ -73,7 +68,6 @@ MongoDB
 
 Mongoose
 
-
 Security & Validation
 
 JWT Authentication
@@ -81,7 +75,6 @@ JWT Authentication
 Role-Based Authorization
 
 Zod (Schema validation)
-
 
 Performance & Dev Experience
 
@@ -91,8 +84,6 @@ Swagger (OpenAPI) – API documentation
 
 Centralized Error Handling
 
-
-
 ---
 
 🏗️ System Architecture
@@ -100,15 +91,15 @@ Centralized Error Handling
 ScaleMart follows a layered architecture:
 
 Client
-  ↓
+↓
 Routes
-  ↓
-Controllers  →  Input validation
-  ↓
-Services     →  Business logic
-  ↓
-Models       →  Database interaction
-  ↓
+↓
+Controllers → Input validation
+↓
+Services → Business logic
+↓
+Models → Database interaction
+↓
 MongoDB
 
 Why this architecture?
@@ -120,8 +111,6 @@ Easy to test and maintain
 Scales well as features grow
 
 Mirrors real-world backend systems
-
-
 
 ---
 
@@ -137,20 +126,13 @@ USER
 
 ADMIN
 
-
-
 Protected routes validate:
 
 1. Token authenticity
 
-
 2. User existence
 
-
 3. User role permission
-
-
-
 
 ---
 
@@ -166,8 +148,6 @@ JWT token generation
 
 Role-based access
 
-
-
 ---
 
 🗂️ Product & Category
@@ -179,8 +159,6 @@ Search, filter, sort, pagination
 Optimized queries with indexes
 
 Admin-only product management
-
-
 
 ---
 
@@ -195,8 +173,6 @@ Quantity validation
 Automatic total calculation
 
 Atomic updates to prevent inconsistency
-
-
 
 ---
 
@@ -214,12 +190,9 @@ CANCELLED
 
 DELIVERED
 
-
 Order cancellation rules
 
 Snapshot of address and cart at order time
-
-
 
 ---
 
@@ -237,10 +210,7 @@ Payment method
 
 Transaction reference
 
-
 Designed for gateway extensibility (Stripe/Razorpay)
-
-
 
 ---
 
@@ -258,9 +228,6 @@ Add new addresses
 Retrieve all user addresses
 Delete addresses
 
-
-
-
 ---
 
 📊 Analytics & Insights (Aggregation Pipelines)
@@ -268,20 +235,19 @@ Delete addresses
 Implemented production-style analytics APIs using MongoDB aggregation:
 
 User Analytics Endpoints
+
 - Total orders and spending
 - Monthly purchase summaries
 - Recent order activity
 
 Admin Analytics Endpoints
+
 - Top selling products
 - Revenue trends
 - Order distribution and insights
 
 > These APIs simulate AI-powered insights without ML overhead.
 > All analytics endpoints feature Redis caching for optimal performance.
-
-
-
 
 ---
 
@@ -297,10 +263,7 @@ Product listings
 
 Analytics endpoints
 
-
 Lean queries for read-heavy APIs
-
-
 
 ---
 
@@ -316,8 +279,6 @@ Centralized error handling
 
 No sensitive data exposed in responses
 
-
-
 ---
 
 📄 API Documentation
@@ -330,10 +291,7 @@ Clean request/response schemas
 
 Easy to test via Swagger UI
 
-
 > Designed so any developer can understand and use the APIs quickly
-
-
 
 ---
 
@@ -342,69 +300,67 @@ Easy to test via Swagger UI
 **Base URL:** `/api/v1`
 
 ### Authentication
+
 - `POST /auth/register` – Create new user account
 - `POST /auth/login` – Authenticate and receive JWT token
 
-
 ### User Management
+
 - `GET /user` – Get user profile
 - `PUT /user` – Update user profile
 
-
 ### Products
+
 - `GET /products` – List all products (paginated, filterable)
 - `GET /products/:id` – Get product details
 - `POST /products` – Create product (ADMIN only)
 - `PUT /products/:id` – Update product (ADMIN only)
 - `DELETE /products/:id` – Delete product (ADMIN only)
 
-
 ### Categories
+
 - `GET /categories` – List all categories
 - `GET /categories/:id` – Get category details
 - `POST /categories` – Create category (ADMIN only)
 - `PUT /categories/:id` – Update category (ADMIN only)
 - `DELETE /categories/:id` – Delete category (ADMIN only)
 
-
 ### Cart
+
 - `GET /cart` – Get user's cart
 - `POST /cart` – Add product to cart
 - `PUT /cart/:productId` – Update product quantity in cart
 - `DELETE /cart/:productId` – Remove product from cart
 
-
 ### Orders
+
 - `GET /order` – Get user's orders
 - `GET /order/:id` – Get order details
 - `POST /order` – Create new order from cart
 - `PUT /order/:id` – Update order status
 - `DELETE /order/:id` – Cancel order
 
-
 ### Payments
+
 - `GET /payment` – Get user's payments
 - `POST /payment` – Process payment
 - `GET /payment/:id` – Get payment details
 
-
 ### Address
+
 - `POST /address/newaddress` – Add new address
 - `GET /address` – Get all user addresses
 - `POST /address/:addressId` – Delete address
 
-
 ### Analytics - User
+
 - `GET /analytics/user/order-summary` – Get user's order statistics
 - `GET /analytics/user/monthly-summary` – Get user's monthly spend summary
 
-
 ### Analytics - Admin
+
 - `GET /analytics/admin/order-overview` – Admin overview of all orders
 - `GET /analytics/admin/top-selling-product` – Get top selling products
-
-
-
 
 ---
 
@@ -418,8 +374,6 @@ Async error handling wrapper
 
 No unhandled promise rejections
 
-
-
 ---
 
 🧠 Challenges & Solutions
@@ -429,14 +383,12 @@ Cart Consistency
 Problem: Avoid duplicate products and incorrect quantities
 Solution: Atomic updates and pre-checks in service layer
 
-
 ---
 
 Order State Management
 
 Problem: Prevent invalid order transitions
 Solution: Controlled status updates with validation
-
 
 ---
 
@@ -445,14 +397,12 @@ Performance Bottlenecks
 Problem: Slow product listing APIs
 Solution: Indexing, pagination, caching
 
-
 ---
 
 Feature Creep
 
 Problem: Too many features vs quality
 Solution: Stopped feature addition and focused on polish & best practices
-
 
 ---
 
@@ -468,8 +418,6 @@ Optimizing MongoDB queries
 
 Thinking like a backend engineer, not just a coder
 
-
-
 ---
 
 🔮 Future Improvements
@@ -482,8 +430,6 @@ Advanced recommendation logic
 
 Microservices-based scaling
 
-
-
 ---
 
 🧑‍💻 Author
@@ -491,7 +437,6 @@ Microservices-based scaling
 Robin Bisht
 Backend Developer (Node.js, MongoDB)
 Focused on scalable systems and clean architecture
-
 
 ---
 
