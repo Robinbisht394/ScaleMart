@@ -7,6 +7,21 @@ ScaleMart goes beyond basic CRUD APIs and focuses on how real e-commerce systems
 
 ---
 
+✨ Recent Updates
+
+**[Feb 2026]** ✅ Integrated Address Management Routes
+- Dedicated endpoints for user address management
+- Add, retrieve, and delete addresses
+- Supports multiple addresses per user
+
+**[Feb 2026]** ✅ Integrated User & Admin Analytics Routes  
+- User analytics: Order summaries and monthly spending insights
+- Admin analytics: Top-selling products and order overview
+- Redis-cached endpoints for optimal performance
+
+
+---
+
 🚀 Project Overview
 
 ScaleMart is a backend system designed to simulate the core functionality of a modern e-commerce platform.
@@ -231,11 +246,18 @@ Designed for gateway extensibility (Stripe/Razorpay)
 
 📍 Address Handling
 
-Address captured during checkout
+Address captured and stored separately during checkout
 
-Stored as order snapshot
+Prevents data mutation issues on user address changes
 
-Prevents data mutation issues
+Accessible via dedicated address API endpoints
+
+Features:
+
+Add new addresses
+Retrieve all user addresses
+Delete addresses
+
 
 
 
@@ -245,25 +267,18 @@ Prevents data mutation issues
 
 Implemented production-style analytics APIs using MongoDB aggregation:
 
-User Insights
+User Analytics Endpoints
+- Total orders and spending
+- Monthly purchase summaries
+- Recent order activity
 
-Total orders
-
-Total amount spent
-
-Recent purchase summary
-
-
-Admin Insights
-
-Top selling products
-
-Revenue trends
-
-Order distribution by status
-
+Admin Analytics Endpoints
+- Top selling products
+- Revenue trends
+- Order distribution and insights
 
 > These APIs simulate AI-powered insights without ML overhead.
+> All analytics endpoints feature Redis caching for optimal performance.
 
 
 
@@ -317,6 +332,76 @@ Easy to test via Swagger UI
 
 
 > Designed so any developer can understand and use the APIs quickly
+
+
+
+---
+
+🔌 API Endpoints Reference
+
+**Base URL:** `/api/v1`
+
+### Authentication
+- `POST /auth/register` – Create new user account
+- `POST /auth/login` – Authenticate and receive JWT token
+
+
+### User Management
+- `GET /user` – Get user profile
+- `PUT /user` – Update user profile
+
+
+### Products
+- `GET /products` – List all products (paginated, filterable)
+- `GET /products/:id` – Get product details
+- `POST /products` – Create product (ADMIN only)
+- `PUT /products/:id` – Update product (ADMIN only)
+- `DELETE /products/:id` – Delete product (ADMIN only)
+
+
+### Categories
+- `GET /categories` – List all categories
+- `GET /categories/:id` – Get category details
+- `POST /categories` – Create category (ADMIN only)
+- `PUT /categories/:id` – Update category (ADMIN only)
+- `DELETE /categories/:id` – Delete category (ADMIN only)
+
+
+### Cart
+- `GET /cart` – Get user's cart
+- `POST /cart` – Add product to cart
+- `PUT /cart/:productId` – Update product quantity in cart
+- `DELETE /cart/:productId` – Remove product from cart
+
+
+### Orders
+- `GET /order` – Get user's orders
+- `GET /order/:id` – Get order details
+- `POST /order` – Create new order from cart
+- `PUT /order/:id` – Update order status
+- `DELETE /order/:id` – Cancel order
+
+
+### Payments
+- `GET /payment` – Get user's payments
+- `POST /payment` – Process payment
+- `GET /payment/:id` – Get payment details
+
+
+### Address
+- `POST /address/newaddress` – Add new address
+- `GET /address` – Get all user addresses
+- `POST /address/:addressId` – Delete address
+
+
+### Analytics - User
+- `GET /analytics/user/order-summary` – Get user's order statistics
+- `GET /analytics/user/monthly-summary` – Get user's monthly spend summary
+
+
+### Analytics - Admin
+- `GET /analytics/admin/order-overview` – Admin overview of all orders
+- `GET /analytics/admin/top-selling-product` – Get top selling products
 
 
 
