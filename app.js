@@ -12,6 +12,9 @@ const cartRoutes = require("./Routes/cart.routes.js");
 const orderRoutes = require("./Routes/order.routes.js");
 const paymentRoutes = require("./Routes/payment.routes.js");
 const categoryRoutes = require("./Routes/category.routes.js");
+const addressRoutes = require("./Routes/address.routes.js");
+const adminAnalyticsRoutes = require("./Routes/admin.routes.js");
+const userAnalyticsRoutes = require("./Routes/userAnalytics.routes.js");
 const app = express();
 
 app.use(
@@ -45,6 +48,9 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/v1/address", addressRoutes);
+app.use("/api/v1/analytics/admin", adminAnalyticsRoutes);
+app.use("/api/v1/analytics/user", userAnalyticsRoutes);
 
 app.get("/", (req, res) => {
   res.send("ScaleMart API running 🚀", req.body);
