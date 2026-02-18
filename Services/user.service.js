@@ -1,6 +1,8 @@
-const userModel = require("../Models/user.model");
-
-const ApiError = requre("../");
+const userModel = require("../Models/user.model.js");
+const { getAIInsights: generateAIInsights } = require("../Utils/gemini");
+const productModel = require("../Models/product.model.js");
+const ApiError = require("../Utils/ApiError.js");
+const orderModel = require("../Models/order.model.js");
 
 const getUserOrderSummary = async (userId) => {
   // check if user exist
@@ -15,9 +17,9 @@ const getUserOrderSummary = async (userId) => {
     {
       $group: {
         _id: null,
-        totalOrders: { $addtoSeet: "$_id" },
+        totalOrders: { $addToSet: "$_id" },
         totalAmount: { $sum: "$totalAmount" },
-        totalItems: { $Sum: "$orderItems.quantity" },
+        totalItems: { $sum: "$orderItems.quantity" },
       },
     },
     {
@@ -41,7 +43,7 @@ const getUserMonthlySummary = async (userId) => {
   const isUserExisted = await userModel.findOne({ _id: userId });
   if (!isUserExisted) throw new ApiError(404, "User Not Registered");
 
-  const userMontlyOrders = await userModel.aggregate([
+  const userMonthlyOrders = await orderModel.aggregate([
     {
       $match: { user: userId },
     },
@@ -78,7 +80,59 @@ const getUserMonthlySummary = async (userId) => {
     throw new ApiError(404, "No Order found");
   }
 
-  return userMontlyOrders;
+  return userMonthlyOrders;
 };
 
-module.exports = { getUserOrderSummary, getUserMonthlySummary };
+const getAIInsights = async (query) => {
+  const filter = await generateAIInsights(query);
+  if (!filter) {
+    throw new ApiError(500, "AI did not return a valid filter");
+  }
+
+  const allowedFields = new Set([
+    "name",
+    "slug",
+    "description",
+    "price",
+    "discountedPrice",
+    "category",
+    "brand",
+    "stock",
+    "sku",
+    "attributes",
+    "ratings",
+    "isFeatured",
+    "isActive",
+    "createdBy",
+  ]);
+
+  const safeFilter = {};
+  Object.keys(filter).forEach((key) => {
+    // allow top-level allowed fields
+    if (allowedFields.has(key) || key.startsWith("$") || key === "$or") {
+      safeFilter[key] = filter[key];
+      return;
+    }
+
+    // allow dotted keys if root field is allowed (e.g. "ratings.average")
+    if (key.includes(".")) {
+      const root = key.split(".")[0];
+      if (allowedFields.has(root)) {
+        safeFilter[key] = filter[key];
+      }
+    }
+  });
+
+  if (safeFilter.isActive === undefined) safeFilter.isActive = true;
+
+  const products = await productModel
+    .find(safeFilter)
+    .populate("category", "name description");
+
+  if (!products || products.length === 0)
+    throw new ApiError(404, "No products found for the provided AI filter");
+
+  return products;
+};
+
+module.exports = { getUserOrderSummary, getUserMonthlySummary, getAIInsights };
