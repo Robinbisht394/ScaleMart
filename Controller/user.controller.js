@@ -2,6 +2,7 @@ const User = require("../Models/user.model.js");
 const ApiResponse = require("../Utils/ApiResponse.js");
 const ApiError = require("../Utils/ApiError.js");
 const asyncHandler = require("../Utils/asyncHandler.js");
+const userService = require("../Services/user.service.js");
 const bcrypt = require("bcryptjs");
 
 // get all users array
@@ -43,4 +44,15 @@ const changeUserPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, [], "Password changed successfully"));
 });
 
-module.exports = { getUsers, changeUserPassword };
+const aiInsights = asyncHandler(async (req, res) => {
+  const query = req.query.q || req.query.query || "";
+  if (!query) throw new ApiError(400, "Query parameter is required");
+
+  const result = await userService.getAIInsights(query);
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, result, "AI insights fetched successfully"));
+});
+
+module.exports = { getUsers, changeUserPassword, aiInsights };
