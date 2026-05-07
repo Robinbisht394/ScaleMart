@@ -4,9 +4,9 @@ const User = require("../Models/user.model");
 const ApiError = require("../Utils/ApiError");
 const { JWT_SECRET, JWT_EXPIRES_IN } = require("../Config/jwt.js");
 
-const generateToken = (userId) => {
-  //generate JWT token for user
-  return jwt.sign({ id: userId }, JWT_SECRET, {
+const generateToken = (userId, role) => {
+  // Generate JWT token for user with role included
+  return jwt.sign({ id: userId, role }, JWT_SECRET, {
     expiresIn: JWT_EXPIRES_IN,
   });
 };
@@ -26,7 +26,7 @@ const signup = async (name, email, password, role) => {
     role: role || "user",
   });
 
-  const token = generateToken(user._id);
+  const token = generateToken(user._id, user.role); // Pass role to token
   return { user, token };
 };
 
@@ -41,8 +41,8 @@ const login = async (email, password) => {
   if (!isMatch) {
     throw new ApiError(401, "Invalid email or password");
   }
-  // new Object(user.password) = "";
-  const token = generateToken(user._id);
+
+  const token = generateToken(user._id, user.role); // Pass role to token
   return { user, token };
 };
 

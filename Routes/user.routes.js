@@ -6,10 +6,9 @@ const validate = require("../middlewares/validate.middleware.js");
 const { protect, userRole } = require("../middlewares/auth.middleware.js");
 router.get("/", userController.getUsers);
 router.get("/ai-insights", userController.aiInsights);
-router.post(
+router.patch(
   "/changepassword",
   protect,
-  userRole,
   validate(userValidation.changeUserPasswordSchema),
 
   userController.changeUserPassword,

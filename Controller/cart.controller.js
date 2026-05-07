@@ -3,19 +3,20 @@ const cartService = require("../Services/cart.service");
 // Product Addition in user cart
 
 const addTocart = async (req, res) => {
-  // const userId = req.user.id;
-  const userId = req.body.id;
-  const { productId, quantity } = req.body;
-  const product = await cartService.addTocart(userId, productId, quantity);
+  const userId = req.user.id;
+
+  const { product, quantity } = req.body;
+  console.log("user id", userId, "product id", product, "quantity", quantity);
+  const cartItem = await cartService.addTocart(userId, product, quantity);
 
   return res
     .status(201)
-    .json(new ApiResponse(201, product, "Item added to cart"));
+    .json(new ApiResponse(201, cartItem, "Item added to cart"));
 };
 
 const getCart = async (req, res) => {
-  // const userId = req.user.id;
-  const userId = req.params.id;
+  const userId = req.user.id;
+  // const userId = req.params.id;
 
   const cart = await cartService.getCart(userId);
 
@@ -48,8 +49,7 @@ const updateQuantity = async (req, res) => {
 };
 
 const clearCart = async (req, res) => {
-  // const userId = req.user.id;
-  const userId = "697c61ce0b24889e965a5cea";
+  const userId = req.user.id;
 
   const cart = await cartService.clearCart(userId);
 

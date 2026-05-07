@@ -1,60 +1,75 @@
 const userModel = require("../Models/user.model");
 const orderModel = require("../Models/order.model");
+const ApiError = require("../Utils/ApiError");
+const mongoose = require("mongoose");
 
 const getOrdersOverview = async (userId) => {
-  const user = await userModel.findone({ _id: userId });
-  if (user) throw new ApiError(404, "User Not Registered");
+  try {
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      throw new ApiError(400, "Invalid User ID");
+    }
 
-  const orders = await orderModel.aggregate([
-    { $unwind: "$orderItems" },
+    const user = await userModel.findById(userId);
 
-    {
-      $lookup: {
-        from: "products",
-        localField: "orderItems.product",
-        foreignField: "_id",
-        as: "product",
+    if (!user) throw new ApiError(404, "User Not Registered");
+
+    const orders = await orderModel.aggregate([
+      { $unwind: "$orderItems" },
+
+      {
+        $lookup: {
+          from: "products",
+          localField: "orderItems.product",
+          foreignField: "_id",
+          as: "product",
+        },
       },
-    },
-    { $unwind: "$product" },
+      { $unwind: "$product" },
 
-    {
-      $match: {
-        "product.seller": mongoose.Types.ObjectId(userId),
+      {
+        $match: {
+          "product.seller": new mongoose.Types.ObjectId(userId),
+        },
       },
-    },
 
-    {
-      $group: {
-        _id: null,
-        totalOrders: { $addToSet: "$_id" },
-        totalRevenue: { $sum: "$orderItems.total" },
-        averageOrderValue: { $avg: "$orderItems.total" },
-        cancelledOrders: {
-          $sum: {
-            $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0],
+      {
+        $group: {
+          _id: null,
+          totalOrders: { $addToSet: "$_id" },
+          totalRevenue: { $sum: "$orderItems.total" },
+          averageOrderValue: { $avg: "$orderItems.total" },
+          cancelledOrders: {
+            $sum: {
+              $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0],
+            },
           },
         },
       },
-    },
-    {
-      $project: {
-        _id: 0,
-        totalOrders: { $size: "$totalOrders" },
-        totalRevenue: 1,
-        averageOrderValue: 1,
-        cancelledOrders: 1,
+      {
+        $project: {
+          _id: 0,
+          totalOrders: { $size: "$totalOrders" },
+          totalRevenue: 1,
+          averageOrderValue: 1,
+          cancelledOrders: 1,
+        },
       },
-    },
-  ]);
+    ]);
 
-  if (orders.length === 0) throw new ApiError(404, "No Orders found");
-  return orders;
+    if (!orders || orders.length === 0) {
+      throw new ApiError(404, "No Orders found");
+    }
+
+    return orders;
+  } catch (error) {
+    console.error("Error in getOrdersOverview:", error);
+    throw error;
+  }
 };
 
 const topSellingProducts = async (userId) => {
-  const user = await userModel.findone({ _id: userId });
-  if (user) throw new ApiError(404, "User Not Registered");
+  const user = await userModel.findOne({ _id: userId });
+  if (!user) throw new ApiError(404, "User Not Registered");
 
   const topSellingProducts = await orderModel.aggregate([
     { $match: { orderStatus: "delivered" } },
@@ -74,7 +89,7 @@ const topSellingProducts = async (userId) => {
 
     {
       $match: {
-        "product.seller": mongoose.Types.ObjectId(userId),
+        "product.seller": new mongoose.Types.ObjectId(userId),
       },
     },
 

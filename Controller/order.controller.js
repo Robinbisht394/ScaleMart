@@ -15,9 +15,8 @@ const createOrder = asyncHandler(async (req, res) => {
 // cancel order via customer
 const cancelOrder = async (req, res) => {
   const orderId = req.params.orderId;
-  // const userId = req.user.id;
 
-  const cancelledOrder = orderService.cancelOrder(orderId, userId);
+  const cancelledOrder = orderService.cancelOrder(orderId, req.user.id);
   if (cancelledOrder) {
     return res.status(200).json(new ApiResponse(200, [], "Order cancelled"));
   }

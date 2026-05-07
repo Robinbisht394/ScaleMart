@@ -1,26 +1,23 @@
 const { z } = require("zod");
 
 const categoryValidationSchema = z.object({
-  body: z.object({
-    name: z
-      .string()
-      .trim()
-      .min(1, "Category name is required")
-      .max(50, "Name is too long"),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Category name is required")
+    .max(50, "Name is too long"),
 
-    slug: z
-      .string()
-      .min(1, "Slug is required")
-      .lowercase("Slug must be lowercase")
-      .trim(),
+  slug: z
+    .string()
+    .trim()
+    .min(1, "Slug is required")
+    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase and URL-friendly"),
 
-    description: z.string().optional(),
+  description: z.string().optional(),
 
-    isActive: z.boolean().default(true).optional(),
+  isActive: z.boolean().optional().default(true),
 
-    // parentCategory is optional/nullable since it defaults to null
-    parentCategory: z.string().nullable().default(null).optional(),
-  }),
+  parentCategory: z.string().nullable().optional().default(null),
 });
 
 module.exports = { categoryValidationSchema };

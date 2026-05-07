@@ -57,10 +57,10 @@ const deleteProduct = async (req) => {
 };
 
 const getAllproducts = async () => {
-  const cacheProducts = await redisClient.redisClient.get("all_products");
-  if (cacheProducts) {
-    return JSON.parse(cacheProducts);
-  }
+  // const cacheProducts = await redisClient.redisClient.get("all_products");
+  // if (cacheProducts) {
+  //   return JSON.parse(cacheProducts);
+  // }
   const products = await productModel
     .find(
       {},
@@ -81,7 +81,7 @@ const getAllproducts = async () => {
 
   if (!products) throw new ApiError(404, "No products Found");
 
-  redisClient.redisClient.setEx("all_products", 300, JSON.stringify(products)); // cache the products for 5 hour
+  // redisClient.redisClient.setEx("all_products", 300, JSON.stringify(products)); // cache the products for 5 hour
 
   return products;
 };

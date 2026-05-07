@@ -5,7 +5,7 @@ const categories = require("../Services/category.service.js");
 const asyncHandler = require("../Utils/asyncHandler.js");
 
 const createCategory = asyncHandler(async (req, res) => {
-  console.log(req.body);
+  console.log(req.body, "category controller");
   const newCategories = await categories.createCategory(req);
 
   return res

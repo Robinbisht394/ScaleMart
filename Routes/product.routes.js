@@ -5,6 +5,7 @@ const productValidation = require("../validations/product.validations");
 const { protect, adminRole } = require("../middlewares/auth.middleware");
 const router = express.Router();
 
+router.get("/", productController.getAllProducts);
 router.post(
   "/",
   protect,
@@ -13,7 +14,6 @@ router.post(
   productController.createProduct,
 );
 router.get("/search", productController.searchProducts);
-router.get("/", productController.getAllProducts);
 router.get("/:id", productController.getProductById);
 router.put("/:id", protect, adminRole, productController.updateProduct);
 router.delete("/:id", protect, adminRole, productController.deleteProduct);

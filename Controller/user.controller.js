@@ -19,14 +19,14 @@ const getUsers = asyncHandler(async (req, res) => {
 // change User password
 
 const changeUserPassword = asyncHandler(async (req, res) => {
-  // const userId = req.user.id;
-  const userId = req.body.id;
+  
+  const userId = req.user;
   const user = await User.findById(userId); //check if user registered
   if (!user) {
     throw new ApiError(404, "User not found");
   }
   console.log(user);
-
+  
   const isMatch = await bcrypt.compare(req.body.password, user.password); //check if newpassword and old password are same
   if (isMatch) throw new ApiError(400, "Password is same as before");
 

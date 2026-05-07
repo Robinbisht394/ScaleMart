@@ -28,6 +28,6 @@ router.patch(
   adminRole,
   orderController.orderStatusUpdate,
 );
-router.get("/", orderController.getMyorders);
+router.get("/", protect, orderController.getMyorders);
 
 module.exports = router;

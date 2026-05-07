@@ -7,7 +7,7 @@ const createNewAdress = async (userId, address) => {
   const registeredUser = await userModel.findById(userId); //check if user registered
   if (!registeredUser) throw new ApiError(404, "User not Registered");
   // check if already register
-
+  console.log(address);
   const isAddressRegistered = await addressModel.findOne({
     fullName: address.fullName,
   });
@@ -32,7 +32,7 @@ const getAddress = async (userId) => {
   const registeredUser = await userModel.findById(userId);
   if (!registeredUser) throw new ApiError(404, "User not Registered");
 
-  const userAddress = await addressModel.findById(userId);
+  const userAddress = await addressModel.find({ user: userId });
   if (!userAddress)
     throw new ApiError(500, "Internal server error. try again!");
 

@@ -3,14 +3,17 @@ const { getAIInsights: generateAIInsights } = require("../Utils/gemini");
 const productModel = require("../Models/product.model.js");
 const ApiError = require("../Utils/ApiError.js");
 const orderModel = require("../Models/order.model.js");
-
+const mongoose = require("mongoose");
 const getUserOrderSummary = async (userId) => {
-  // check if user exist
+  // check if user exists
   const isUserExisted = await userModel.findOne({ _id: userId });
   if (!isUserExisted) throw new ApiError(404, "User Not Registered");
 
+  // Convert userId to ObjectId
+  const objectIdUserId = new mongoose.Types.ObjectId(userId);
+
   const userOrders = await orderModel.aggregate([
-    { $match: { user: userId } },
+    { $match: { user: objectIdUserId } },
     {
       $unwind: "$orderItems",
     },
@@ -43,9 +46,12 @@ const getUserMonthlySummary = async (userId) => {
   const isUserExisted = await userModel.findOne({ _id: userId });
   if (!isUserExisted) throw new ApiError(404, "User Not Registered");
 
+  // Convert userId to ObjectId
+  const objectIdUserId = new mongoose.Types.ObjectId(userId);
+
   const userMonthlyOrders = await orderModel.aggregate([
     {
-      $match: { user: userId },
+      $match: { user: objectIdUserId },
     },
     {
       $group: {

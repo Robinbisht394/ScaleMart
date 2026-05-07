@@ -10,10 +10,9 @@ const redisClient = require("../Config/redis").redisClient;
 const createOrder = async (req) => {
   const { shippingAdress, paymentMethod } = req.body;
 
-  // const userId = req.body.id;
   const userId = req.user.id;
 
-  //   validate cart
+  // Validate cart
   const cart = await cartModel
     .findOne({ user: userId })
     .populate("cartItems.product", "name price discountedPrice");
@@ -21,40 +20,33 @@ const createOrder = async (req) => {
   if (!cart || cart.cartItems.length === 0)
     throw new ApiError(400, "Cart is Empty");
 
-  // check if address is new or old
-  let isAddressRegistered;
-  if (typeof shippingAdress == "object") {
-    isAddressRegistered = await addressService.createNewAdress(
-      userId,
-      shippingAdress,
-    );
-  }
-  //   new order object
+  // New order object
   const order = {
     user: userId,
-    shippingAddress:
-      typeof shippingAdress === "string"
-        ? shippingAdress
-        : isAddressRegistered._id,
+    shippingAddress: shippingAdress, // Directly use the provided shipping address
     paymentMethod: paymentMethod,
   };
 
-  // calculate total cartItems
+  // Calculate total cartItems
   const totalItems = cart.cartItems.reduce((sum, item) => {
     return sum + item.quantity;
   }, 0);
-  const deliveryCharges = totalItems * 5; // cacluate delivery charges
-  const totalAmount = cart.cartItems.reduce((sum, item) => {
-    // calculate totalAmount of cart
-    return (
-      sum +
-      item.product.price * item.quantity -
-      item.product.discountedPrice * item.quantity
-    );
+  const deliveryCharges = totalItems * 5; // Calculate delivery charges
+
+  // Calculate total price and total discount
+  const totalPrice = cart.cartItems.reduce((sum, item) => {
+    return sum + item.product.price * item.quantity;
   }, 0);
+  const totalDiscount = cart.cartItems.reduce((sum, item) => {
+    return sum + item.product.discountedPrice * item.quantity;
+  }, 0);
+
+  // Calculate totalAmount
+  const totalAmount = totalPrice + deliveryCharges - totalDiscount;
+
   order.totalItems = totalItems;
   order.deliveryCharges = deliveryCharges;
-  order.totalAmount = helper.sum(totalAmount, deliveryCharges);
+  order.totalAmount = totalAmount; // Assign the corrected totalAmount
   order.orderItems = cart.cartItems.map((item) => {
     const data = {};
     data.product = item.product._id;
@@ -69,7 +61,7 @@ const createOrder = async (req) => {
   const newOrder = await orderModel.create(order);
 
   if (!newOrder) throw new ApiError(500, "Order not generated");
-  //   clear cart
+  // Clear cart
   await cartService.clearCart(userId);
   return newOrder;
 };
@@ -119,21 +111,21 @@ const orderStatusUpdate = async (orderId, status) => {
 
 // get all order for customer
 const getMyorders = async (userId) => {
-  const cacheOrders = await redisClient.get(`orders_${userId}`);
-  if (cacheOrders) {
-    return JSON.parse(cacheOrders);
-  } // return cache orders if exist
+  // const cacheOrders = await redisClient.get(`orders_${userId}`);
+  // if (cacheOrders) {
+  //   return JSON.parse(cacheOrders);
+  // } // return cache orders if exist
 
   const orders = await orderModel
     .find({ user: userId })
     .sort({ createdAt: -1 });
 
-  if (orders.lenght == 0) {
+  if (orders.length == 0) {
     throw new ApiError(404, "No Order Found");
   }
 
   // cache the user orders for 5 minutes
-  redisClient.setEx(`orders_${userId}`, 300, JSON.stringify(orders));
+  // redisClient.setEx(`orders_${userId}`, 300, JSON.stringify(orders));
   return orders;
 };
 
