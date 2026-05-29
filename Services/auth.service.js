@@ -33,8 +33,9 @@ const signup = async (name, email, password, role) => {
 // user login
 const login = async (email, password) => {
   const user = await User.findOne({ email });
+  console.log("user found for login", user);
   if (!user) {
-    throw new ApiError(401, "Invalid email or password");
+    throw new ApiError(401, "Invalid email"); // throw API error");
   }
 
   const isMatch = await bcrypt.compare(password, user.password); //compare password

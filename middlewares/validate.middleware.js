@@ -2,9 +2,9 @@ const { ZodError } = require("zod");
 const ApiError = require("../Utils/ApiError");
 
 const validate = (schema) => (req, res, next) => {
-  
+  console.log(req.body);
   try {
-    // Try structured validation first
+    // Try structured validation 
     const result = schema.safeParse({
       body: req.body,
       params: req.params,
@@ -28,7 +28,7 @@ const validate = (schema) => (req, res, next) => {
     console.log("validation error", err);
 
     if (err instanceof ZodError) {
-      const message = err.errors.map((e) => e.message).join(", ");
+      const message = err.issues.map((e) => e.message).join(", ");
       return next(new ApiError(400, message));
     }
 

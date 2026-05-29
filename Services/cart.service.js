@@ -5,6 +5,7 @@ const redisClient = require("../Config/redis").redisClient;
 
 const addTocart = async (userId, productId, productQuantity) => {
   // check if product exist
+  console.log("product details", productId, productQuantity);
   const product = await productModel.findOne({ _id: productId });
   if (!product) return new ApiError(404, "Product not Found");
 

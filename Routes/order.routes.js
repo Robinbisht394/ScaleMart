@@ -13,7 +13,7 @@ router.post(
   "/",
   protect,
   userRole,
-  validate(orderValidationSchema),
+  // validate(orderValidationSchema),
   orderController.createOrder,
 );
 router.delete(

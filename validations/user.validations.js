@@ -2,12 +2,25 @@ const { z } = require("zod");
 
 const createUserSchema = z.object({
   body: z.object({
-    name: z.string().min(3, "user name is too short"),
-    email: z.string().min(5, "provide valid email address"),
+    name: z
+      .string()
+      .trim()
+      .nonempty("name is required")
+      .min(3, "user name is too short"),
+
+    email: z
+      .string()
+      .nonempty("email is required")
+      .email("provide valid email address"),
+
     password: z
       .string()
+      .nonempty("password is required")
       .min(5, "min length must be 5")
-      .includes("@", "invalid email address"),
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).+$/,
+        "password must contain alphabet, number and special character",
+      ),
   }),
 });
 

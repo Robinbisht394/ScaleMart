@@ -9,7 +9,7 @@ const redisClient = require("../Config/redis").redisClient;
 //create new order
 const createOrder = async (req) => {
   const { shippingAdress, paymentMethod } = req.body;
-
+  console.log("Received shipping address:", shippingAdress, paymentMethod); // Debug log
   const userId = req.user.id;
 
   // Validate cart
@@ -81,9 +81,9 @@ const cancelOrder = async (orderId, userId) => {
   if (nonCancellableStatus.includes(order.orderStatus))
     throw new ApiError(400, "order cannot be cancelled");
   const updatedOrder = await orderModel.findByIdAndUpdate(orderId, {
-    orderStatus: "Cancelled",
+    orderStatus: "cancelled",
   });
-
+  console.log("updated order", updatedOrder);
   if (!updatedOrder) throw new ApiError(400, "Order not cancelled ! try again");
   return updatedOrder;
 };
@@ -93,13 +93,12 @@ const orderStatusUpdate = async (orderId, status) => {
   const order = await orderModel.findOne({ _id: orderId });
 
   if (!order) throw new ApiError(404, "Order not found");
-  const nonCancellableStatus = ["delivered", "shipped", "Cancelled"];
+  const nonCancellableStatus = ["delivered", "shipped", "cancelled"];
 
   if (!nonCancellableStatus.includes(status))
     throw new ApiError(400, "status cannot be updated");
   const updatedStatus = await orderModel.findByIdAndUpdate(orderId, {
     orderStatus: status,
-    new: true,
   });
 
   if (!updatedStatus) {

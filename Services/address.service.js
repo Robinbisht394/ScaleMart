@@ -3,8 +3,8 @@ const addressModel = require("../Models/address.model");
 
 const userModel = require("../Models/user.model");
 
-const createNewAdress = async (userId, address) => {
-  const registeredUser = await userModel.findById(userId); //check if user registered
+const createNewAdress = async (user, address) => {
+  const registeredUser = await userModel.findById(user.id); //check if user registered
   if (!registeredUser) throw new ApiError(404, "User not Registered");
   // check if already register
   console.log(address);
@@ -16,7 +16,7 @@ const createNewAdress = async (userId, address) => {
     throw new ApiError(400, "Address already registered");
 
   const newAddress = await addressModel.create({
-    user: userId,
+    user: user.id,
     fullName: address.fullName,
     addressLine: address.addressLine,
     phone: address.phone,
@@ -28,19 +28,19 @@ const createNewAdress = async (userId, address) => {
   return newAddress;
 };
 
-const getAddress = async (userId) => {
-  const registeredUser = await userModel.findById(userId);
+const getAddress = async (user) => {
+  const registeredUser = await userModel.findById(user.id);
   if (!registeredUser) throw new ApiError(404, "User not Registered");
 
-  const userAddress = await addressModel.find({ user: userId });
+  const userAddress = await addressModel.find({ user: user.id });
   if (!userAddress)
     throw new ApiError(500, "Internal server error. try again!");
 
   return userAddress;
 };
 
-const deleteAddress = async (userId, addressId) => {
-  const registeredUser = await userModel.findById(userId);
+const deleteAddress = async (user, addressId) => {
+  const registeredUser = await userModel.findById(user.id);
   if (!registeredUser) throw new ApiError(404, "User not Registered");
 
   const deleteAddress = await addressModel.findByIdAndDelete(addressId);

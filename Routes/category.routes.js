@@ -10,7 +10,7 @@ router.post(
   "/",
   protect,
   adminRole,
-  validate(categoryValidations.categoryValidationSchema),
+  // validate(categoryValidations.categoryValidationSchema),
   categoryController.createCategory,
 );
 
