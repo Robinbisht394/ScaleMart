@@ -24,6 +24,8 @@ jobs:
 
       - name: Run Tests
         run: npm test
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Build Docker Image
         run: docker build -t scale-mart .
