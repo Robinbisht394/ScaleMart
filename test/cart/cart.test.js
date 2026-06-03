@@ -1,10 +1,10 @@
 const request = require("supertest");
 const bcrypt = require("bcryptjs");
 const app = require("../../app");
-const User = require("../../models/user.model");
-const Product = require("../../models/product.model");
+const User = require("../../Models/user.model");
+const Product = require("../../Models/product.model");
 const Category = require("../../models/category.model");
-const Cart = require("../../models/cart.model");
+const Cart = require("../../Models/cart.model");
 
 describe("Cart API Testing", () => {
   let token;

@@ -1,6 +1,6 @@
 const request = require("supertest");
 const app = require("../../app");
-const User = require("../../models/user.model.js");
+const User = require("../../Models/user.model.js");
 const bcrypt = require("bcryptjs");
 const address = require("../../Models/address.model.js");
 const addressModel = require("../../Models/address.model.js");

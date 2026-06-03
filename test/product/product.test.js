@@ -3,9 +3,9 @@ const bcrypt = require("bcryptjs");
 
 const app = require("../../app");
 
-const User = require("../../models/user.model");
-const Category = require("../../models/category.model");
-const Product = require("../../models/product.model");
+const User = require("../../Models/user.model");
+const Category = require("../../Models/category.model");
+const Product = require("../../Models/product.model");
 const { createCategory } = require("../helper/createCategory.js");
 const { createAdminAndGetToken } = require("../helper/createUser.js");
 describe("Product Routes API", () => {

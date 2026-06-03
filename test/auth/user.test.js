@@ -1,6 +1,6 @@
 const request = require("supertest");
 const app = require("../../app");
-const User = require("../../models/user.model.js");
+const User = require("../../Models/user.model.js");
 const bcrypt = require("bcryptjs");
 
 // test cases for user routes
